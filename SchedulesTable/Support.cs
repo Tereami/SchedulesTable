@@ -23,7 +23,45 @@ namespace SchedulesTable
 {
     public static class Support
     {
-        public static List<ViewSheet> GetScheduleSheets(Document doc, ViewSchedule vs)
+        public static List<SheetScheduleInfo> GetSchedulesInfo(Document doc, Settings sets, string complectNumber = "")
+        {
+            List<SheetScheduleInfo> infos = new List<SheetScheduleInfo>();
+            List<ScheduleSheetInstance> scheduleInstances = new FilteredElementCollector(doc)
+                .OfClass(typeof(ScheduleSheetInstance))
+                .Cast<ScheduleSheetInstance>()
+                .Where(i => i.Name.EndsWith("*"))
+                .ToList();
+            List<ViewSheet> sheets = GetAllSheetsFromDocument(doc);
+            foreach(ViewSheet sheet in sheets)
+            {
+                if(sets.useComplects)
+                {
+                    Parameter complectParam = sheet.LookupParameter(sets.sheetComplectParamName);
+                    if(complectParam == null || !complectParam.HasValue)
+                    {
+                        continue;
+                    }
+                    string curComplectValue = complectParam.AsString();
+                    if(curComplectValue != complectNumber)
+                    {
+                        continue;
+                    }
+                }
+
+                List<ScheduleSheetInstance> curSsis = scheduleInstances
+                    .Where(i => i.OwnerViewId.IntegerValue == sheet.Id.IntegerValue)
+                    .ToList();
+                foreach(ScheduleSheetInstance ssi in curSsis)
+                {
+                    SheetScheduleInfo info = new SheetScheduleInfo(ssi, sheet, sets);
+                    infos.Add(info);
+                }
+            }
+           infos.OrderBy(i => i.SheetNumber);
+            return infos;  
+        }
+
+        public static List<ViewSheet> GetSheetsContainsScheduleInstances(Document doc, ViewSchedule vs)
         {
             int scheduleId = vs.Id.IntegerValue;
             List<ScheduleSheetInstance> ssis = new FilteredElementCollector(doc)
@@ -42,8 +80,6 @@ namespace SchedulesTable
                 ViewSheet sheet = doc.GetElement(sheetId) as ViewSheet;
                 sheets.Add(sheet);
             }
-
-            
             
             return sheets;
         }
@@ -54,6 +90,7 @@ namespace SchedulesTable
                 .OfClass(typeof(ViewSheet))
                 .WhereElementIsNotElementType()
                 .Cast<ViewSheet>()
+                .Where(i => !i.IsPlaceholder)
                 .ToList();
             return sheets;
         }
@@ -67,7 +104,6 @@ namespace SchedulesTable
                 .OfClass(typeof(RevitLinkInstance))
                 .Cast<RevitLinkInstance>()
                 .ToList();
-            
 
             foreach(RevitLinkInstance rli in links)
             {
@@ -79,6 +115,5 @@ namespace SchedulesTable
             }
             return docs;
         }
-    
     }
 }

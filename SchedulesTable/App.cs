@@ -16,8 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Autodesk.Revit.UI; //для работы с элементами интерфейса
-using System.Windows.Media.Imaging; //для работы с картинками кнопок
+using Autodesk.Revit.UI;
 #endregion
 
 namespace SchedulesTable
@@ -29,19 +28,16 @@ namespace SchedulesTable
         {
             assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
-            string tabName = "Weandrevit";
+            string tabName = "BIM-STARTER TEST";
             try { application.CreateRibbonTab(tabName); } catch { }
 
             RibbonPanel panel1 = application.CreateRibbonPanel(tabName, "Ведомость");
-            PushButton btn = panel1.AddItem(new PushButtonData(
+            _ = panel1.AddItem(new PushButtonData(
                 "btnCreateSchedule",
                 "Ведомость\nспецификаций",
                 assemblyPath,
                 "SchedulesTable.CommandCreateTable")
                 ) as PushButton;
-            btn.LargeImage = PngImageSource("SchedulesTable.Resources.Schedules.png");
-            btn.Image = PngImageSource("SchedulesTable.Resources.SchedulesSmall.png");
-
             return Result.Succeeded;
         }
 
@@ -50,14 +46,6 @@ namespace SchedulesTable
         public Result OnShutdown(UIControlledApplication application)
         {
             return Result.Succeeded;
-        }
-
-
-        private System.Windows.Media.ImageSource PngImageSource(string embeddedPathname)
-        {
-            System.IO.Stream st = this.GetType().Assembly.GetManifestResourceStream(embeddedPathname);
-            PngBitmapDecoder decoder = new PngBitmapDecoder(st, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-            return decoder.Frames[0];
         }
     }
 }
