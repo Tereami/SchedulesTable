@@ -14,6 +14,7 @@ namespace SchedulesTable
 
         public SheetScheduleInfo(ScheduleSheetInstance ssi, ViewSheet sheet, Settings sets)
         {
+            Debug.WriteLine("Start creating new info, schedule " + ssi.Name + ", sheet: " + sheet.Name);
             string sheetNumberString = "";
             if(sets.useStandardSheetNumber)
             {
@@ -38,6 +39,7 @@ namespace SchedulesTable
             Regex regex = new Regex(@"\*(?<name>.+)\*");
             Match match = regex.Match(ssi.Name);
             ScheduleName = match.Groups["name"].Value;
+            Debug.WriteLine("Done, sheet number: " + SheetNumber + ", name: " + ScheduleName);
         }
     }
 }

@@ -14,8 +14,7 @@ Zuev Aleksandr, 2020, all rigths reserved.*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Autodesk.Revit.DB;
 #endregion
 
@@ -25,25 +24,31 @@ namespace SchedulesTable
     {
         public static List<SheetScheduleInfo> GetSchedulesInfo(Document doc, Settings sets, string complectNumber = "")
         {
+            Debug.WriteLine("Get schedules in document: " + doc.Title);
             List<SheetScheduleInfo> infos = new List<SheetScheduleInfo>();
             List<ScheduleSheetInstance> scheduleInstances = new FilteredElementCollector(doc)
                 .OfClass(typeof(ScheduleSheetInstance))
                 .Cast<ScheduleSheetInstance>()
                 .Where(i => i.Name.EndsWith("*"))
                 .ToList();
+            Debug.WriteLine("Schedule instances found: " + scheduleInstances.Count);
+
             List<ViewSheet> sheets = GetAllSheetsFromDocument(doc);
             foreach(ViewSheet sheet in sheets)
             {
+                Debug.WriteLine("Check sheet: " + sheet.Name);
                 if(sets.useComplects)
                 {
                     Parameter complectParam = sheet.LookupParameter(sets.sheetComplectParamName);
                     if(complectParam == null || !complectParam.HasValue)
                     {
+                        Debug.WriteLine("No complect parameter");
                         continue;
                     }
                     string curComplectValue = complectParam.AsString();
                     if(curComplectValue != complectNumber)
                     {
+                        Debug.WriteLine("Skip, sheet complect = " + curComplectValue + " is not " + complectNumber);
                         continue;
                     }
                 }
@@ -51,14 +56,16 @@ namespace SchedulesTable
                 List<ScheduleSheetInstance> curSsis = scheduleInstances
                     .Where(i => i.OwnerViewId.IntegerValue == sheet.Id.IntegerValue)
                     .ToList();
+                Debug.WriteLine("Schedule instances on sheet: " + curSsis.Count);
                 foreach(ScheduleSheetInstance ssi in curSsis)
                 {
+                    Debug.WriteLine("Schedule instance id: " + ssi.Id.IntegerValue);
                     SheetScheduleInfo info = new SheetScheduleInfo(ssi, sheet, sets);
                     infos.Add(info);
                 }
             }
            infos.OrderBy(i => i.SheetNumber);
-            return infos;  
+           return infos;  
         }
 
         public static List<ViewSheet> GetSheetsContainsScheduleInstances(Document doc, ViewSchedule vs)
@@ -78,6 +85,7 @@ namespace SchedulesTable
             {
                 ElementId sheetId = ssi.OwnerViewId;
                 ViewSheet sheet = doc.GetElement(sheetId) as ViewSheet;
+                Debug.WriteLine(vs.Name + " is at sheet " + sheet.Name);
                 sheets.Add(sheet);
             }
             
@@ -92,6 +100,7 @@ namespace SchedulesTable
                 .Cast<ViewSheet>()
                 .Where(i => !i.IsPlaceholder)
                 .ToList();
+            Debug.WriteLine("Sheets found: " + sheets.Count + " in " + doc.Title);
             return sheets;
         }
 
@@ -107,12 +116,14 @@ namespace SchedulesTable
 
             foreach(RevitLinkInstance rli in links)
             {
+                Debug.WriteLine("Check rvt link: " + rli.Name);
                 Document linkDoc = rli.GetLinkDocument();
                 if (linkDoc == null) continue;
                 if (docs.Contains(linkDoc)) continue;
 
                 docs.Add(linkDoc);
             }
+            Debug.WriteLine("Link docs found: " + docs.Count);
             return docs;
         }
     }

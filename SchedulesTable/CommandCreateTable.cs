@@ -15,10 +15,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using Autodesk.Revit.DB; //для работы с элементами модели Revit
-using Autodesk.Revit.UI; //для работы с элементами интерфейса
-using Autodesk.Revit.UI.Selection; //работы с выделенными элементами
-using System.Text.RegularExpressions;
+using Autodesk.Revit.DB; 
+using Autodesk.Revit.UI; 
+using Autodesk.Revit.UI.Selection; 
 #endregion
 
 namespace SchedulesTable
@@ -29,6 +28,8 @@ namespace SchedulesTable
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            Debug.Listeners.Clear();
+            Debug.Listeners.Add(new RbsLogger.Logger("SchedulesTable"));
             Settings sets = null;
             try
             {
@@ -36,6 +37,7 @@ namespace SchedulesTable
             }
             catch (OperationCanceledException)
             {
+                Debug.WriteLine("Cancelled by user");
                 return Result.Cancelled;
             }
 
@@ -48,14 +50,17 @@ namespace SchedulesTable
             View curView = doc.ActiveView;
             if (curView is ViewSchedule)
             {
+                Debug.WriteLine("Current view is viewschedule");
                 templateVs = curView as ViewSchedule;
                 if (!templateVs.Name.Contains("спецификаций"))
                 {
                     message = "Активная спецификация - не ведомость спецификаций.";
+                    Debug.WriteLine("Current schedule is not schedules table");
                     return Result.Failed;
                 }
 
                 List<ViewSheet> scheduleSheets = Support.GetSheetsContainsScheduleInstances(doc, templateVs);
+                Debug.WriteLine("Schedule instances count: " + scheduleSheets.Count);
                 if (scheduleSheets.Count > 1)
                 {
                     message = "Ведомость размещена на нескольких листах! Невозможно определить принадлежность к комплекту";
@@ -70,6 +75,7 @@ namespace SchedulesTable
             }
             else if (curView is ViewSheet)
             {
+                Debug.WriteLine("Current view is Sheet");
                 ElementId ssiId = null;
                 Selection sel = uiDoc.Selection;
                 List<ElementId> selIds = sel.GetElementIds().ToList();
@@ -77,13 +83,15 @@ namespace SchedulesTable
                 {
                     try
                     {
+                        Debug.WriteLine("No selected elems, PickPoint");
                         Reference refer = sel.PickObject(ObjectType.Element,
                             new ScheduleSelectionFilter(),
-                            "Выберите ведомость на листе общих данных");
+                            "Выберите ведомость спецификаций на листе");
                         ssiId = refer.ElementId;
                     }
                     catch
                     {
+                        Debug.WriteLine("PickPoint cancelled");
                         return Result.Cancelled;
                     }
                 }
@@ -91,16 +99,19 @@ namespace SchedulesTable
                 {
                     ssiId = selIds.First();
                 }
+                Debug.WriteLine("Schedule instance id: " + ssiId.IntegerValue);
 
                 ScheduleSheetInstance selSse = doc.GetElement(ssiId) as ScheduleSheetInstance;
                 if (selSse == null)
                 {
                     message = "Выбранный элемент - не ведомость спецификаций.";
+                    Debug.WriteLine("Selected elem is not a schedule");
                     return Result.Failed;
                 }
                 if (!selSse.Name.Contains("спецификаций"))
                 {
                     message = "Выбранная спецификация - не ведомость спецификаций.";
+                    Debug.WriteLine("Selected elem is not a schedule table");
                     return Result.Failed;
                 }
                 firstSheet = curView as ViewSheet;
@@ -109,17 +120,8 @@ namespace SchedulesTable
             else
             {
                 message = "Перед запуском плагина откройте ведомость спецификаций или выберите её на листе общих данных.";
+                Debug.WriteLine("Active view is not a schedule or a sheet");
                 return Result.Failed;
-            }
-
-            List<ViewSheet> sheetsAll = Support.GetAllSheetsFromDocument(doc);
-            List<ViewSheet> sheets = new List<ViewSheet>();
-
-            List<Document> docs = new List<Document> { doc };
-
-            if (sets.getLinkFiles)
-            {
-                docs.AddRange(Support.GetAllLinkedDocs(doc));
             }
 
             string sheetComplect = "";
@@ -132,17 +134,20 @@ namespace SchedulesTable
                     return Result.Failed;
                 }
                 sheetComplect = sheetComplectParam.AsString();
-
-                List<ViewSheet> sheetsCurComplect = sheetsAll
-                    .Where(i => i.LookupParameter(sets.sheetComplectParamName).AsString() == sheetComplect)
-                    .ToList();
-                sheets.AddRange(sheetsCurComplect);
             }
+
+            List<Document> docs = new List<Document> { doc };
+            if (sets.getLinkFiles)
+            {
+                docs.AddRange(Support.GetAllLinkedDocs(doc));
+            }
+            Debug.WriteLine("Documents: " + docs.Count);
 
             List<SheetScheduleInfo> infos = new List<SheetScheduleInfo>();
             foreach (Document curDoc in docs)
             {
                 List<SheetScheduleInfo> curInfos = Support.GetSchedulesInfo(curDoc, sets, sheetComplect);
+                Debug.WriteLine("Schedules found in file " + curDoc.Title + ": " + curInfos.Count);
                 infos.AddRange(curInfos);
             }
 
@@ -154,7 +159,6 @@ namespace SchedulesTable
                 return Result.Failed;
             }
 
-            //получаю табличные данные для дальнейшей работы с ними
             TableData tData = templateVs.GetTableData();
             TableSectionData tsd = tData.GetSectionData(SectionType.Header);
 
@@ -178,6 +182,7 @@ namespace SchedulesTable
                 {
                     tsd.RemoveRow(3);
                 }
+                Debug.WriteLine("Rows deleted");
 
                 //очищаю ячейки на всякий случай
                 tsd.ClearCell(2, 0);
@@ -186,6 +191,7 @@ namespace SchedulesTable
                 tsd.ClearCell(3, 1);
                 tsd.ClearCell(4, 0);
                 tsd.ClearCell(4, 1);
+                Debug.WriteLine("Cells cleaned");
 
                 //добавляю пустые строки
                 for (int i = 0; i < infos.Count - 3; i++)
@@ -196,8 +202,8 @@ namespace SchedulesTable
                     tsd.SetCellStyle(tsd.LastRowNumber - 1, 0, cellStyle1);
                     tsd.SetCellStyle(tsd.LastRowNumber - 1, 1, cellStyle2);
                     tsd.SetCellStyle(tsd.LastRowNumber - 1, 2, cellStyle3);
+                    Debug.WriteLine("Create row number: " + i);
                 }
-
                 
                 for (int i = 0; i < infos.Count; i++)
                 {
@@ -205,21 +211,24 @@ namespace SchedulesTable
                     SheetScheduleInfo info = infos[i];
                     tsd.SetCellText(curRowNumber, 0, info.SheetNumber.ToString());
                     tsd.SetCellText(curRowNumber, 1, info.ScheduleName);
+                    Debug.WriteLine("Write: " + info.SheetNumber + " : " + info.ScheduleName + ", row №: " + curRowNumber);
 
                     //Увеличу высоту строки, если текст слишком длинный
                     if (info.ScheduleName.Length > sets.maxCharsInOneLine)
                     {
+                        Debug.WriteLine("Increase row height");
                         tsd.SetRowHeight(curRowNumber, sets.rowHeight * sets.rowHeightCoeff);
                     }
                     else
                     {
+                        Debug.WriteLine("Set row height");
                         tsd.SetRowHeight(curRowNumber, sets.rowHeight);
                     }
                 }
-
                 t.Commit();
             }
             sets.Save();
+            Debug.WriteLine("Succeded");
             return Result.Succeeded;
         }
     }
