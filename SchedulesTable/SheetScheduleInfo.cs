@@ -9,16 +9,17 @@ namespace SchedulesTable
 {
     public class SheetScheduleInfo
     {
-        public int SheetNumber;
+        public string SheetNumberString;
+        public int SheetNumberInt;
         public string ScheduleName;
 
         public SheetScheduleInfo(ScheduleSheetInstance ssi, ViewSheet sheet, Settings sets)
         {
             Debug.WriteLine("Start creating new info, schedule " + ssi.Name + ", sheet: " + sheet.Name);
-            string sheetNumberString = "";
+            string sheetNumberStringRaw = "";
             if(sets.useStandardSheetNumber)
             {
-                sheetNumberString = sheet.get_Parameter(BuiltInParameter.SHEET_NUMBER).AsString();
+                sheetNumberStringRaw = sheet.get_Parameter(BuiltInParameter.SHEET_NUMBER).AsString();
             }
             else
             {
@@ -30,16 +31,17 @@ namespace SchedulesTable
                     throw new Exception(msg);
                 }
             }
-            if(sheetNumberString == "")
+            if(sheetNumberStringRaw == "")
             {
                 throw new Exception("Unable to get sheet number for sheet: " + sheet.Name);
             }
-            SheetNumber = Convert.ToInt32(Regex.Replace(sheetNumberString, @"[^\d]+", ""));
+            SheetNumberString = Regex.Replace(sheetNumberStringRaw, @"[^\d]+", "");
+            SheetNumberInt = Convert.ToInt32(SheetNumberString);
 
             Regex regex = new Regex(@"\*(?<name>.+)\*");
             Match match = regex.Match(ssi.Name);
             ScheduleName = match.Groups["name"].Value;
-            Debug.WriteLine("Done, sheet number: " + SheetNumber + ", name: " + ScheduleName);
+            Debug.WriteLine("Done, sheet number: " + SheetNumberString + ", name: " + ScheduleName);
         }
     }
 }

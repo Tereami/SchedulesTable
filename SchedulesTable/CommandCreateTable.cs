@@ -150,6 +150,7 @@ namespace SchedulesTable
                 Debug.WriteLine("Schedules found in file " + curDoc.Title + ": " + curInfos.Count);
                 infos.AddRange(curInfos);
             }
+            infos = infos.OrderBy(i => i.SheetNumberInt).ToList();
 
             Debug.WriteLine("Schedules found: " + infos.Count);
             if (infos.Count == 0)
@@ -209,9 +210,9 @@ namespace SchedulesTable
                 {
                     int curRowNumber = i + 2;
                     SheetScheduleInfo info = infos[i];
-                    tsd.SetCellText(curRowNumber, 0, info.SheetNumber.ToString());
+                    tsd.SetCellText(curRowNumber, 0, info.SheetNumberString.ToString());
                     tsd.SetCellText(curRowNumber, 1, info.ScheduleName);
-                    Debug.WriteLine("Write: " + info.SheetNumber + " : " + info.ScheduleName + ", row №: " + curRowNumber);
+                    Debug.WriteLine("Write: " + info.SheetNumberString + " : " + info.ScheduleName + ", row №: " + curRowNumber);
 
                     //Увеличу высоту строки, если текст слишком длинный
                     if (info.ScheduleName.Length > sets.maxCharsInOneLine)

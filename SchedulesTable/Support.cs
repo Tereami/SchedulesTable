@@ -64,7 +64,7 @@ namespace SchedulesTable
                     infos.Add(info);
                 }
             }
-           infos.OrderBy(i => i.SheetNumber);
+           
            return infos;  
         }
 
