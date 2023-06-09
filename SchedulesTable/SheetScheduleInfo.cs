@@ -17,21 +17,25 @@ namespace SchedulesTable
         {
             Debug.WriteLine("Start creating new info, schedule " + ssi.Name + ", sheet: " + sheet.Name);
             string sheetNumberStringRaw = "";
-            if(sets.useStandardSheetNumber)
+            if (sets.useStandardSheetNumber)
             {
                 sheetNumberStringRaw = sheet.get_Parameter(BuiltInParameter.SHEET_NUMBER).AsString();
             }
             else
             {
-                Parameter complectParam = sheet.LookupParameter(sets.sheetComplectParamName);
-                if (complectParam == null || !complectParam.HasValue)
+                Parameter SheetNumberParam = sheet.LookupParameter(sets.altSheetNumberParam);
+                if (SheetNumberParam == null || !SheetNumberParam.HasValue)
                 {
                     string msg = "Unable to get " + sets.altSheetNumberParam + " from sheet id " + sheet.Id.IntegerValue;
                     Debug.WriteLine(msg);
                     throw new Exception(msg);
                 }
+                else
+                {
+                    sheetNumberStringRaw = SheetNumberParam.AsString();
+                }
             }
-            if(sheetNumberStringRaw == "")
+            if (sheetNumberStringRaw == "")
             {
                 throw new Exception("Unable to get sheet number for sheet: " + sheet.Name);
             }
