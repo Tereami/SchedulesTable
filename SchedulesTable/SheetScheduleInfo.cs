@@ -23,8 +23,8 @@ namespace SchedulesTable
             }
             else
             {
-                Parameter SheetNumberParam = sheet.LookupParameter(sets.altSheetNumberParam);
-                if (SheetNumberParam == null || !SheetNumberParam.HasValue)
+                Parameter sheetNumberParam = sheet.LookupParameter(sets.altSheetNumberParam);
+                if (sheetNumberParam == null || !sheetNumberParam.HasValue)
                 {
                     string msg = "Unable to get " + sets.altSheetNumberParam + " from sheet id " + sheet.Id.IntegerValue;
                     Debug.WriteLine(msg);
@@ -32,7 +32,7 @@ namespace SchedulesTable
                 }
                 else
                 {
-                    sheetNumberStringRaw = SheetNumberParam.AsString();
+                    sheetNumberStringRaw = sheetNumberParam.AsString();
                 }
             }
             if (sheetNumberStringRaw == "")
