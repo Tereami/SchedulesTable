@@ -26,14 +26,14 @@ namespace SchedulesTable
     [Serializable]
     public class Settings
     {
-        public bool useComplects = true;
-        public string sheetComplectParamName = "Орг.КомплектЧертежей";
+        public bool useComplects = false;
+        public string sheetComplectParamName = MyStrings.ParameterSheetSet;
 
         [NonSerialized]
         public bool getLinkFiles = false;
 
         public bool useStandardSheetNumber = true;
-        public string altSheetNumberParam = "SHT_Номер листа";
+        public string altSheetNumberParam = MyStrings.ParameterSheetNumber;
 
         public double rowHeight = 0.027;
         public int maxCharsInOneLine = 85;

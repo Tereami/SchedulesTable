@@ -43,10 +43,10 @@ namespace SchedulesTable
             {
                 Debug.WriteLine("Current view is viewschedule");
                 templateVs = curView as ViewSchedule;
-                if (!templateVs.Name.Contains("спецификаций"))
+                if (!templateVs.Name.Contains("спецификаций") && !templateVs.Name.Contains("schedule"))
                 {
-                    message = "Активная спецификация - не ведомость спецификаций.";
-                    Debug.WriteLine("Current schedule is not schedules table");
+                    message = MyStrings.ErrorIncorrectSchedule;
+                    Debug.WriteLine(message);
                     return Result.Failed;
                 }
 
@@ -54,13 +54,13 @@ namespace SchedulesTable
                 Debug.WriteLine("Schedule instances count: " + scheduleSheets.Count);
                 if (scheduleSheets.Count > 1)
                 {
-                    message = "Ведомость размещена на нескольких листах! Невозможно определить принадлежность к комплекту";
+                    message = MyStrings.ErrorTwoSheets;
                     return Result.Failed;
                 }
                 firstSheet = scheduleSheets[0];
                 if (firstSheet == null)
                 {
-                    message = "Ведомость спецификаций не размещена на листе общих данных";
+                    message = MyStrings.ErrorNoScheduleOnFirstSheet;
                     return Result.Failed;
                 }
             }
@@ -77,7 +77,7 @@ namespace SchedulesTable
                         Debug.WriteLine("No selected elems, PickPoint");
                         Reference refer = sel.PickObject(ObjectType.Element,
                             new ScheduleSelectionFilter(),
-                            "Выберите ведомость спецификаций на листе");
+                            MyStrings.MsgSelectSchedule);
                         ssiId = refer.ElementId;
                     }
                     catch
@@ -95,14 +95,14 @@ namespace SchedulesTable
                 ScheduleSheetInstance selSse = doc.GetElement(ssiId) as ScheduleSheetInstance;
                 if (selSse == null)
                 {
-                    message = "Выбранный элемент - не ведомость спецификаций.";
-                    Debug.WriteLine("Selected elem is not a schedule");
+                    message = MyStrings.ErrorIncorrectSchedule;
+                    Debug.WriteLine(message);
                     return Result.Failed;
                 }
-                if (!selSse.Name.Contains("спецификаций"))
+                if (!selSse.Name.Contains("спецификаций") && !selSse.Name.Contains("schedule"))
                 {
-                    message = "Выбранная спецификация - не ведомость спецификаций.";
-                    Debug.WriteLine("Selected elem is not a schedule table");
+                    message = MyStrings.ErrorIncorrectSchedule;
+                    Debug.WriteLine(message);
                     return Result.Failed;
                 }
                 firstSheet = curView as ViewSheet;
@@ -110,8 +110,8 @@ namespace SchedulesTable
             }
             else
             {
-                message = "Перед запуском плагина откройте ведомость спецификаций или выберите её на листе общих данных.";
-                Debug.WriteLine("Active view is not a schedule or a sheet");
+                message = MyStrings.MsgSelectOrOpen;
+                Debug.WriteLine(message);
                 return Result.Failed;
             }
 
@@ -129,15 +129,13 @@ namespace SchedulesTable
             }
 
 
-
-
             string sheetComplect = "";
             if (sets.useComplects)
             {
                 Parameter sheetComplectParam = firstSheet.LookupParameter(sets.sheetComplectParamName);
                 if (sheetComplectParam == null || !sheetComplectParam.HasValue)
                 {
-                    message = "Не задан Комплект у листа, на котором расположена Ведомость спецификаций";
+                    message = $"{MyStrings.ErrorNoSheetComplect} {sets.sheetComplectParamName} {firstSheet.Name}";
                     return Result.Failed;
                 }
                 sheetComplect = sheetComplectParam.AsString();
@@ -162,8 +160,7 @@ namespace SchedulesTable
             Debug.WriteLine("Schedules found: " + infos.Count);
             if (infos.Count == 0)
             {
-                message = "Подходящие спецификаци не найдены!";
-                message += "Задайте имя нужных спецификаций с использованием символа * по аналогу: КЖ0_Детали_*Спецификация конструкций*";
+                message = MyStrings.ErrorNoSchedulesFound;
                 return Result.Failed;
             }
 
@@ -173,7 +170,7 @@ namespace SchedulesTable
             int lastRowNumber = tsd.LastRowNumber;
             if (lastRowNumber < 4)
             {
-                message = "Строк должно быть не менее 3 штук.";
+                message = MyStrings.Error3Row;
                 return Result.Failed;
             }
 
@@ -183,7 +180,7 @@ namespace SchedulesTable
 
             using (Transaction t = new Transaction(doc))
             {
-                t.Start("Ведомость спецификаций");
+                t.Start("Schedules table");
 
                 //удаляю лишние промежуточные строки
                 while (tsd.LastRowNumber > 4)

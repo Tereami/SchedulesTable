@@ -27,7 +27,7 @@ namespace SchedulesTable
                 Parameter sheetNumberParam = sheet.LookupParameter(sets.altSheetNumberParam);
                 if (sheetNumberParam == null || !sheetNumberParam.HasValue)
                 {
-                    string msg = "Unable to get " + sets.altSheetNumberParam + " from sheet id " + sheet.Id.IntegerValue;
+                    string msg = "Failed to get " + sets.altSheetNumberParam + " from sheet id " + sheet.Id.IntegerValue;
                     Debug.WriteLine(msg);
                     throw new Exception(msg);
                 }
@@ -38,7 +38,7 @@ namespace SchedulesTable
             }
             if (sheetNumberStringRaw == "")
             {
-                throw new Exception("Unable to get sheet number for sheet: " + sheet.Name);
+                throw new Exception("Failed to get sheet number for sheet: " + sheet.Name);
             }
             SheetNumberString = Regex.Replace(sheetNumberStringRaw, @"[^\d]+", "");
             SheetNumberInt = Convert.ToInt32(SheetNumberString);
@@ -60,7 +60,7 @@ namespace SchedulesTable
 
             ScheduleName = scheduleNameRaw;
 
-            Debug.WriteLine("Done, sheet number: " + SheetNumberString + ", name: " + ScheduleName);
+            Debug.WriteLine("Completed, sheet number: " + SheetNumberString + ", name: " + ScheduleName);
         }
     }
 }

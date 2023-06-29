@@ -29,6 +29,7 @@ namespace SchedulesTable
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkBoxGetLinkFiles = new System.Windows.Forms.CheckBox();
             this.textBoxComplectParamName = new System.Windows.Forms.TextBox();
@@ -40,8 +41,10 @@ namespace SchedulesTable
             this.radioButtonCustomSheetNumber = new System.Windows.Forms.RadioButton();
             this.radioButtonUseStandardSheetNumber = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.textBoxNewLineSymbol = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.numericRowCoeff = new System.Windows.Forms.NumericUpDown();
             this.numericRowHeight = new System.Windows.Forms.NumericUpDown();
@@ -49,8 +52,6 @@ namespace SchedulesTable
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOk = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBoxNewLineSymbol = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -61,119 +62,73 @@ namespace SchedulesTable
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.checkBoxGetLinkFiles);
             this.groupBox1.Controls.Add(this.textBoxComplectParamName);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.radioButtonUseComplects);
             this.groupBox1.Controls.Add(this.radioAllProject);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(216, 130);
-            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "_Поиск листов";
             // 
             // checkBoxGetLinkFiles
             // 
-            this.checkBoxGetLinkFiles.AutoSize = true;
-            this.checkBoxGetLinkFiles.Location = new System.Drawing.Point(6, 108);
+            resources.ApplyResources(this.checkBoxGetLinkFiles, "checkBoxGetLinkFiles");
             this.checkBoxGetLinkFiles.Name = "checkBoxGetLinkFiles";
-            this.checkBoxGetLinkFiles.Size = new System.Drawing.Size(183, 17);
-            this.checkBoxGetLinkFiles.TabIndex = 3;
-            this.checkBoxGetLinkFiles.Text = "_Учитывать связанные файлы";
             this.checkBoxGetLinkFiles.UseVisualStyleBackColor = true;
             // 
             // textBoxComplectParamName
             // 
-            this.textBoxComplectParamName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxComplectParamName.Enabled = false;
-            this.textBoxComplectParamName.Location = new System.Drawing.Point(6, 78);
+            resources.ApplyResources(this.textBoxComplectParamName, "textBoxComplectParamName");
             this.textBoxComplectParamName.Name = "textBoxComplectParamName";
-            this.textBoxComplectParamName.Size = new System.Drawing.Size(204, 20);
-            this.textBoxComplectParamName.TabIndex = 2;
-            this.textBoxComplectParamName.Text = "Орг.КомплектЧертежей";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 62);
+            resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(125, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "_Параметр комплекта:";
             // 
             // radioButtonUseComplects
             // 
-            this.radioButtonUseComplects.AutoSize = true;
-            this.radioButtonUseComplects.Location = new System.Drawing.Point(6, 42);
+            resources.ApplyResources(this.radioButtonUseComplects, "radioButtonUseComplects");
             this.radioButtonUseComplects.Name = "radioButtonUseComplects";
-            this.radioButtonUseComplects.Size = new System.Drawing.Size(183, 17);
-            this.radioButtonUseComplects.TabIndex = 0;
-            this.radioButtonUseComplects.Text = "_Только в текущем комплекте";
             this.radioButtonUseComplects.UseVisualStyleBackColor = true;
             this.radioButtonUseComplects.CheckedChanged += new System.EventHandler(this.radioButtonUseComplects_CheckedChanged);
             // 
             // radioAllProject
             // 
-            this.radioAllProject.AutoSize = true;
+            resources.ApplyResources(this.radioAllProject, "radioAllProject");
             this.radioAllProject.Checked = true;
-            this.radioAllProject.Location = new System.Drawing.Point(6, 19);
             this.radioAllProject.Name = "radioAllProject";
-            this.radioAllProject.Size = new System.Drawing.Size(108, 17);
-            this.radioAllProject.TabIndex = 0;
             this.radioAllProject.TabStop = true;
-            this.radioAllProject.Text = "_Во всём файле";
             this.radioAllProject.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Controls.Add(this.textBoxAltSheetParamName);
             this.groupBox2.Controls.Add(this.radioButtonCustomSheetNumber);
             this.groupBox2.Controls.Add(this.radioButtonUseStandardSheetNumber);
-            this.groupBox2.Location = new System.Drawing.Point(12, 148);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(216, 96);
-            this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "_Номер листа";
             // 
             // textBoxAltSheetParamName
             // 
-            this.textBoxAltSheetParamName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxAltSheetParamName.Enabled = false;
-            this.textBoxAltSheetParamName.Location = new System.Drawing.Point(6, 65);
+            resources.ApplyResources(this.textBoxAltSheetParamName, "textBoxAltSheetParamName");
             this.textBoxAltSheetParamName.Name = "textBoxAltSheetParamName";
-            this.textBoxAltSheetParamName.Size = new System.Drawing.Size(204, 20);
-            this.textBoxAltSheetParamName.TabIndex = 1;
-            this.textBoxAltSheetParamName.Text = "SHT_Номер листа";
             // 
             // radioButtonCustomSheetNumber
             // 
-            this.radioButtonCustomSheetNumber.AutoSize = true;
-            this.radioButtonCustomSheetNumber.Location = new System.Drawing.Point(6, 42);
+            resources.ApplyResources(this.radioButtonCustomSheetNumber, "radioButtonCustomSheetNumber");
             this.radioButtonCustomSheetNumber.Name = "radioButtonCustomSheetNumber";
-            this.radioButtonCustomSheetNumber.Size = new System.Drawing.Size(183, 17);
-            this.radioButtonCustomSheetNumber.TabIndex = 0;
-            this.radioButtonCustomSheetNumber.Text = "_Пользовательский параметр:";
             this.radioButtonCustomSheetNumber.UseVisualStyleBackColor = true;
             this.radioButtonCustomSheetNumber.CheckedChanged += new System.EventHandler(this.radioButtonCustomSheetNumber_CheckedChanged);
             // 
             // radioButtonUseStandardSheetNumber
             // 
-            this.radioButtonUseStandardSheetNumber.AutoSize = true;
+            resources.ApplyResources(this.radioButtonUseStandardSheetNumber, "radioButtonUseStandardSheetNumber");
             this.radioButtonUseStandardSheetNumber.Checked = true;
-            this.radioButtonUseStandardSheetNumber.Location = new System.Drawing.Point(6, 19);
             this.radioButtonUseStandardSheetNumber.Name = "radioButtonUseStandardSheetNumber";
-            this.radioButtonUseStandardSheetNumber.Size = new System.Drawing.Size(165, 17);
-            this.radioButtonUseStandardSheetNumber.TabIndex = 0;
             this.radioButtonUseStandardSheetNumber.TabStop = true;
-            this.radioButtonUseStandardSheetNumber.Text = "_Стандартный номер листа";
             this.radioButtonUseStandardSheetNumber.UseVisualStyleBackColor = true;
             // 
             // groupBox3
@@ -186,42 +141,34 @@ namespace SchedulesTable
             this.groupBox3.Controls.Add(this.numericRowCoeff);
             this.groupBox3.Controls.Add(this.numericRowHeight);
             this.groupBox3.Controls.Add(this.numericMaxChars);
-            this.groupBox3.Location = new System.Drawing.Point(12, 250);
+            resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(216, 192);
-            this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "_Размеры ячеек";
+            // 
+            // textBoxNewLineSymbol
+            // 
+            resources.ApplyResources(this.textBoxNewLineSymbol, "textBoxNewLineSymbol");
+            this.textBoxNewLineSymbol.Name = "textBoxNewLineSymbol";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 144);
-            this.label4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 1);
+            resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(195, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "_Коэфф. увеличения высоты строки:";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 18);
-            this.label3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 1);
+            resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(114, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "_Высота строки, мм:";
+            // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 60);
-            this.label2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 1);
+            resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(204, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "_Перенос строки при символах более:";
             // 
             // numericRowCoeff
             // 
@@ -231,7 +178,7 @@ namespace SchedulesTable
             0,
             0,
             65536});
-            this.numericRowCoeff.Location = new System.Drawing.Point(6, 161);
+            resources.ApplyResources(this.numericRowCoeff, "numericRowCoeff");
             this.numericRowCoeff.Maximum = new decimal(new int[] {
             3,
             0,
@@ -243,8 +190,6 @@ namespace SchedulesTable
             0,
             0});
             this.numericRowCoeff.Name = "numericRowCoeff";
-            this.numericRowCoeff.Size = new System.Drawing.Size(204, 20);
-            this.numericRowCoeff.TabIndex = 0;
             this.numericRowCoeff.Value = new decimal(new int[] {
             15,
             0,
@@ -253,7 +198,7 @@ namespace SchedulesTable
             // 
             // numericRowHeight
             // 
-            this.numericRowHeight.Location = new System.Drawing.Point(6, 35);
+            resources.ApplyResources(this.numericRowHeight, "numericRowHeight");
             this.numericRowHeight.Maximum = new decimal(new int[] {
             20,
             0,
@@ -265,8 +210,6 @@ namespace SchedulesTable
             0,
             0});
             this.numericRowHeight.Name = "numericRowHeight";
-            this.numericRowHeight.Size = new System.Drawing.Size(204, 20);
-            this.numericRowHeight.TabIndex = 0;
             this.numericRowHeight.Value = new decimal(new int[] {
             8,
             0,
@@ -275,7 +218,7 @@ namespace SchedulesTable
             // 
             // numericMaxChars
             // 
-            this.numericMaxChars.Location = new System.Drawing.Point(6, 77);
+            resources.ApplyResources(this.numericMaxChars, "numericMaxChars");
             this.numericMaxChars.Maximum = new decimal(new int[] {
             200,
             0,
@@ -287,8 +230,6 @@ namespace SchedulesTable
             0,
             0});
             this.numericMaxChars.Name = "numericMaxChars";
-            this.numericMaxChars.Size = new System.Drawing.Size(204, 20);
-            this.numericMaxChars.TabIndex = 0;
             this.numericMaxChars.Value = new decimal(new int[] {
             85,
             0,
@@ -297,67 +238,33 @@ namespace SchedulesTable
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.buttonCancel, "buttonCancel");
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(86, 453);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(68, 23);
-            this.buttonCancel.TabIndex = 3;
-            this.buttonCancel.Text = "_Отмена";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonOk
             // 
-            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOk.Location = new System.Drawing.Point(12, 453);
+            resources.ApplyResources(this.buttonOk, "buttonOk");
             this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(68, 23);
-            this.buttonOk.TabIndex = 3;
-            this.buttonOk.Text = "ОК";
             this.buttonOk.UseVisualStyleBackColor = true;
             this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.button1, "button1");
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(160, 453);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(68, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "_Справка";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 102);
-            this.label5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 1);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(120, 13);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Символ новой строки:";
-            // 
-            // textBoxNewLineSymbol
-            // 
-            this.textBoxNewLineSymbol.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxNewLineSymbol.Location = new System.Drawing.Point(6, 119);
-            this.textBoxNewLineSymbol.MaxLength = 1;
-            this.textBoxNewLineSymbol.Name = "textBoxNewLineSymbol";
-            this.textBoxNewLineSymbol.Size = new System.Drawing.Size(204, 20);
-            this.textBoxNewLineSymbol.TabIndex = 1;
-            this.textBoxNewLineSymbol.Text = "@";
             // 
             // FormSettings
             // 
             this.AcceptButton = this.buttonOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(240, 488);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonCancel);
@@ -366,8 +273,6 @@ namespace SchedulesTable
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "FormSettings";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "_Настройки";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
