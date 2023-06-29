@@ -15,9 +15,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using Autodesk.Revit.DB; 
-using Autodesk.Revit.UI; 
-using Autodesk.Revit.UI.Selection; 
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Selection;
 #endregion
 
 namespace SchedulesTable
@@ -30,16 +30,7 @@ namespace SchedulesTable
         {
             Debug.Listeners.Clear();
             Debug.Listeners.Add(new RbsLogger.Logger("SchedulesTable"));
-            Settings sets = null;
-            try
-            {
-                sets = Settings.Activate();
-            }
-            catch (OperationCanceledException)
-            {
-                Debug.WriteLine("Cancelled by user");
-                return Result.Cancelled;
-            }
+            
 
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
             Document doc = uiDoc.Document;
@@ -124,6 +115,22 @@ namespace SchedulesTable
                 return Result.Failed;
             }
 
+            bool includeLinks = templateVs.Definition.IncludeLinkedFiles;
+
+            Settings sets = null;
+            try
+            {
+                sets = Settings.Activate(includeLinks);
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("Cancelled by user");
+                return Result.Cancelled;
+            }
+
+
+
+
             string sheetComplect = "";
             if (sets.useComplects)
             {
@@ -205,7 +212,7 @@ namespace SchedulesTable
                     tsd.SetCellStyle(tsd.LastRowNumber - 1, 2, cellStyle3);
                     Debug.WriteLine("Create row number: " + i);
                 }
-                
+
                 for (int i = 0; i < infos.Count; i++)
                 {
                     int curRowNumber = i + 2;
@@ -215,16 +222,14 @@ namespace SchedulesTable
                     Debug.WriteLine("Write: " + info.SheetNumberString + " : " + info.ScheduleName + ", row №: " + curRowNumber);
 
                     //Увеличу высоту строки, если текст слишком длинный
-                    if (info.ScheduleName.Length > sets.maxCharsInOneLine)
+                    double increaseRowHeight = 1.0;
+                    for (int c = 1; c < info.RowsCount; c++)
                     {
-                        Debug.WriteLine("Increase row height");
-                        tsd.SetRowHeight(curRowNumber, sets.rowHeight * sets.rowHeightCoeff);
+                        increaseRowHeight *= sets.rowHeightCoeff;
                     }
-                    else
-                    {
-                        Debug.WriteLine("Set row height");
-                        tsd.SetRowHeight(curRowNumber, sets.rowHeight);
-                    }
+                    double rowHeight = sets.rowHeight * increaseRowHeight;
+                    Debug.WriteLine($"Row height coeff: {increaseRowHeight}, height: {rowHeight}");
+                    tsd.SetRowHeight(curRowNumber, rowHeight);
                 }
                 t.Commit();
             }

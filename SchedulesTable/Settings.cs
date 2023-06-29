@@ -28,17 +28,21 @@ namespace SchedulesTable
     {
         public bool useComplects = true;
         public string sheetComplectParamName = "Орг.КомплектЧертежей";
+
+        [NonSerialized]
         public bool getLinkFiles = false;
+
         public bool useStandardSheetNumber = true;
         public string altSheetNumberParam = "SHT_Номер листа";
 
         public double rowHeight = 0.027;
         public int maxCharsInOneLine = 85;
+        public string newLineSymbol = "@";
         public double rowHeightCoeff = 1.5;
 
         public static string xmlPath = "";
 
-        public static Settings Activate()
+        public static Settings Activate(bool includeLinks)
         {
             Debug.WriteLine("Start activate settings");
             string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -76,6 +80,8 @@ namespace SchedulesTable
                 s = new Settings();
                 Debug.WriteLine("Settings is null, create new one");
             }
+
+            s.getLinkFiles = includeLinks;
             FormSettings form = new FormSettings(s);
             Debug.WriteLine("Show settings form");
             form.ShowDialog();

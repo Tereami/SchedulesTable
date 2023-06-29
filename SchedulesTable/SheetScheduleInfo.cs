@@ -12,6 +12,7 @@ namespace SchedulesTable
         public string SheetNumberString;
         public int SheetNumberInt;
         public string ScheduleName;
+        public int RowsCount = 1;
 
         public SheetScheduleInfo(ScheduleSheetInstance ssi, ViewSheet sheet, Settings sets)
         {
@@ -44,7 +45,21 @@ namespace SchedulesTable
 
             Regex regex = new Regex(@"\*(?<name>.+)\*");
             Match match = regex.Match(ssi.Name);
-            ScheduleName = match.Groups["name"].Value;
+            string scheduleNameRaw = match.Groups["name"].Value;
+
+            if(scheduleNameRaw.Contains(sets.newLineSymbol))
+            {
+                RowsCount = scheduleNameRaw.Split(sets.newLineSymbol[0]).Length;
+                scheduleNameRaw = scheduleNameRaw.Replace(sets.newLineSymbol, System.Environment.NewLine);
+            }
+            else if(scheduleNameRaw.Length > sets.maxCharsInOneLine)
+            {
+                double rowsCountRaw = (double)scheduleNameRaw.Length / (double)sets.maxCharsInOneLine;
+                RowsCount =(int)Math.Ceiling(rowsCountRaw);
+            }
+
+            ScheduleName = scheduleNameRaw;
+
             Debug.WriteLine("Done, sheet number: " + SheetNumberString + ", name: " + ScheduleName);
         }
     }

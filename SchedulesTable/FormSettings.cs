@@ -41,6 +41,7 @@ namespace SchedulesTable
             textBoxAltSheetParamName.Text = s.altSheetNumberParam;
             numericRowHeight.Value = (decimal)(s.rowHeight * 304.8);
             numericMaxChars.Value = s.maxCharsInOneLine;
+            textBoxNewLineSymbol.Text = s.newLineSymbol;
             numericRowCoeff.Value = (decimal)s.rowHeightCoeff;
         }
 
@@ -64,6 +65,7 @@ namespace SchedulesTable
             sets.altSheetNumberParam = textBoxAltSheetParamName.Text;
             sets.rowHeight = ((double)numericRowHeight.Value) / 304.8;
             sets.maxCharsInOneLine = (int)numericMaxChars.Value;
+            sets.newLineSymbol = textBoxNewLineSymbol.Text;
             sets.rowHeightCoeff = (double)numericRowCoeff.Value;
 
             this.DialogResult = DialogResult.OK;
@@ -78,7 +80,7 @@ namespace SchedulesTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("https://bim-starter.com/plugins/rebarsketch/");
+            System.Diagnostics.Process.Start("https://bim-starter.com/plugins/schedulestable/");
         }
     }
 }
