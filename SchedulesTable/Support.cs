@@ -29,7 +29,7 @@ namespace SchedulesTable
             List<ScheduleSheetInstance> scheduleInstances = new FilteredElementCollector(doc)
                 .OfClass(typeof(ScheduleSheetInstance))
                 .Cast<ScheduleSheetInstance>()
-                .Where(i => i.Name.EndsWith("*"))
+                .Where(i => doc.GetElement(i.ScheduleId).Name.EndsWith("*"))
                 .ToList();
             Debug.WriteLine("Schedule instances found: " + scheduleInstances.Count);
 
