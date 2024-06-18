@@ -44,12 +44,12 @@ namespace SchedulesTable
 
         public static Settings Activate(bool includeLinks)
         {
-            Debug.WriteLine("Start activate settings");
+            Trace.WriteLine("Start activate settings");
             string appdataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string rbspath = Path.Combine(appdataPath, "bim-starter");
             if (!Directory.Exists(rbspath))
             {
-                Debug.WriteLine("Create directory " + rbspath);
+                Trace.WriteLine("Create directory " + rbspath);
                 Directory.CreateDirectory(rbspath);
             }
             string solutionName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
@@ -57,7 +57,7 @@ namespace SchedulesTable
             if (!Directory.Exists(solutionFolder))
             {
                 Directory.CreateDirectory(solutionFolder);
-                Debug.WriteLine("Create directory " + solutionFolder);
+                Trace.WriteLine("Create directory " + solutionFolder);
             }
             xmlPath = Path.Combine(solutionFolder, "settings.xml");
             Settings s = null;
@@ -70,7 +70,7 @@ namespace SchedulesTable
                     try
                     {
                         s = (Settings)serializer.Deserialize(reader);
-                        Debug.WriteLine("Settings deserialize success");
+                        Trace.WriteLine("Settings deserialize success");
                     }
                     catch { }
                 }
@@ -78,33 +78,33 @@ namespace SchedulesTable
             if (s == null)
             {
                 s = new Settings();
-                Debug.WriteLine("Settings is null, create new one");
+                Trace.WriteLine("Settings is null, create new one");
             }
 
             s.getLinkFiles = includeLinks;
             FormSettings form = new FormSettings(s);
-            Debug.WriteLine("Show settings form");
+            Trace.WriteLine("Show settings form");
             form.ShowDialog();
             if (form.DialogResult != System.Windows.Forms.DialogResult.OK)
             {
-                Debug.WriteLine("Setting form cancelled");
+                Trace.WriteLine("Setting form cancelled");
                 throw new OperationCanceledException();
             }
             s = form.sets;
-            Debug.WriteLine("Settings success");
+            Trace.WriteLine("Settings success");
             return s;
         }
 
         public void Save()
         {
-            Debug.WriteLine("Start save settins to file " + xmlPath);
+            Trace.WriteLine("Start save settins to file " + xmlPath);
             if (File.Exists(xmlPath)) File.Delete(xmlPath);
             XmlSerializer serializer = new XmlSerializer(typeof(Settings));
             using (FileStream writer = new FileStream(xmlPath, FileMode.OpenOrCreate))
             {
                 serializer.Serialize(writer, this);
             }
-            Debug.WriteLine("Save settings success");
+            Trace.WriteLine("Save settings success");
         }
     }
 }

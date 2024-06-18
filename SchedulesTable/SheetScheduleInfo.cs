@@ -16,7 +16,7 @@ namespace SchedulesTable
 
         public SheetScheduleInfo(ScheduleSheetInstance ssi, ViewSheet sheet, Settings sets)
         {
-            Debug.WriteLine("Start creating new info, schedule " + ssi.Name + ", sheet: " + sheet.Name);
+            Trace.WriteLine("Start creating new info, schedule " + ssi.Name + ", sheet: " + sheet.Name);
             string sheetNumberStringRaw = "";
             if (sets.useStandardSheetNumber)
             {
@@ -27,8 +27,8 @@ namespace SchedulesTable
                 Parameter sheetNumberParam = sheet.LookupParameter(sets.altSheetNumberParam);
                 if (sheetNumberParam == null || !sheetNumberParam.HasValue)
                 {
-                    string msg = "Failed to get " + sets.altSheetNumberParam + " from sheet id " + sheet.Id.IntegerValue;
-                    Debug.WriteLine(msg);
+                    string msg = "Failed to get " + sets.altSheetNumberParam + " from sheet id " + sheet.Id.GetValue();
+                    Trace.WriteLine(msg);
                     throw new Exception(msg);
                 }
                 else
@@ -60,7 +60,7 @@ namespace SchedulesTable
 
             ScheduleName = scheduleNameRaw;
 
-            Debug.WriteLine("Completed, sheet number: " + SheetNumberString + ", name: " + ScheduleName);
+            Trace.WriteLine("Completed, sheet number: " + SheetNumberString + ", name: " + ScheduleName);
         }
     }
 }

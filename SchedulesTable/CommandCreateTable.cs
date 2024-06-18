@@ -28,8 +28,8 @@ namespace SchedulesTable
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            Debug.Listeners.Clear();
-            Debug.Listeners.Add(new RbsLogger.Logger("SchedulesTable"));
+            Trace.Listeners.Clear();
+            Trace.Listeners.Add(new RbsLogger.Logger("SchedulesTable"));
             
 
             UIDocument uiDoc = commandData.Application.ActiveUIDocument;
@@ -41,17 +41,17 @@ namespace SchedulesTable
             View curView = doc.ActiveView;
             if (curView is ViewSchedule)
             {
-                Debug.WriteLine("Current view is viewschedule");
+                Trace.WriteLine("Current view is viewschedule");
                 templateVs = curView as ViewSchedule;
                 if (!templateVs.Name.Contains("спецификаций") && !templateVs.Name.Contains("schedule"))
                 {
                     message = MyStrings.ErrorIncorrectSchedule;
-                    Debug.WriteLine(message);
+                    Trace.WriteLine(message);
                     return Result.Failed;
                 }
 
                 List<ViewSheet> scheduleSheets = Support.GetSheetsContainsScheduleInstances(doc, templateVs);
-                Debug.WriteLine("Schedule instances count: " + scheduleSheets.Count);
+                Trace.WriteLine("Schedule instances count: " + scheduleSheets.Count);
                 if (scheduleSheets.Count > 1)
                 {
                     message = MyStrings.ErrorTwoSheets;
@@ -66,7 +66,7 @@ namespace SchedulesTable
             }
             else if (curView is ViewSheet)
             {
-                Debug.WriteLine("Current view is Sheet");
+                Trace.WriteLine("Current view is Sheet");
                 ElementId ssiId = null;
                 Selection sel = uiDoc.Selection;
                 List<ElementId> selIds = sel.GetElementIds().ToList();
@@ -74,7 +74,7 @@ namespace SchedulesTable
                 {
                     try
                     {
-                        Debug.WriteLine("No selected elems, PickPoint");
+                        Trace.WriteLine("No selected elems, PickPoint");
                         Reference refer = sel.PickObject(ObjectType.Element,
                             new ScheduleSelectionFilter(),
                             MyStrings.MsgSelectSchedule);
@@ -82,7 +82,7 @@ namespace SchedulesTable
                     }
                     catch
                     {
-                        Debug.WriteLine("PickPoint cancelled");
+                        Trace.WriteLine("PickPoint cancelled");
                         return Result.Cancelled;
                     }
                 }
@@ -90,19 +90,19 @@ namespace SchedulesTable
                 {
                     ssiId = selIds.First();
                 }
-                Debug.WriteLine("Schedule instance id: " + ssiId.IntegerValue);
+                Trace.WriteLine("Schedule instance id: " + ssiId.GetValue());
 
                 ScheduleSheetInstance selSse = doc.GetElement(ssiId) as ScheduleSheetInstance;
                 if (selSse == null)
                 {
                     message = MyStrings.ErrorIncorrectSchedule;
-                    Debug.WriteLine(message);
+                    Trace.WriteLine(message);
                     return Result.Failed;
                 }
                 if (!selSse.Name.Contains("спецификаций") && !selSse.Name.Contains("schedule"))
                 {
                     message = MyStrings.ErrorIncorrectSchedule;
-                    Debug.WriteLine(message);
+                    Trace.WriteLine(message);
                     return Result.Failed;
                 }
                 firstSheet = curView as ViewSheet;
@@ -111,7 +111,7 @@ namespace SchedulesTable
             else
             {
                 message = MyStrings.MsgSelectOrOpen;
-                Debug.WriteLine(message);
+                Trace.WriteLine(message);
                 return Result.Failed;
             }
 
@@ -124,7 +124,7 @@ namespace SchedulesTable
             }
             catch (OperationCanceledException)
             {
-                Debug.WriteLine("Cancelled by user");
+                Trace.WriteLine("Cancelled by user");
                 return Result.Cancelled;
             }
 
@@ -146,18 +146,18 @@ namespace SchedulesTable
             {
                 docs.AddRange(Support.GetAllLinkedDocs(doc));
             }
-            Debug.WriteLine("Documents: " + docs.Count);
+            Trace.WriteLine("Documents: " + docs.Count);
 
             List<SheetScheduleInfo> infos = new List<SheetScheduleInfo>();
             foreach (Document curDoc in docs)
             {
                 List<SheetScheduleInfo> curInfos = Support.GetSchedulesInfo(curDoc, sets, sheetComplect);
-                Debug.WriteLine("Schedules found in file " + curDoc.Title + ": " + curInfos.Count);
+                Trace.WriteLine("Schedules found in file " + curDoc.Title + ": " + curInfos.Count);
                 infos.AddRange(curInfos);
             }
             infos = infos.OrderBy(i => i.SheetNumberInt).ToList();
 
-            Debug.WriteLine("Schedules found: " + infos.Count);
+            Trace.WriteLine("Schedules found: " + infos.Count);
             if (infos.Count == 0)
             {
                 message = MyStrings.ErrorNoSchedulesFound;
@@ -187,7 +187,7 @@ namespace SchedulesTable
                 {
                     tsd.RemoveRow(3);
                 }
-                Debug.WriteLine("Rows deleted");
+                Trace.WriteLine("Rows deleted");
 
                 //очищаю ячейки на всякий случай
                 tsd.ClearCell(2, 0);
@@ -196,7 +196,7 @@ namespace SchedulesTable
                 tsd.ClearCell(3, 1);
                 tsd.ClearCell(4, 0);
                 tsd.ClearCell(4, 1);
-                Debug.WriteLine("Cells cleaned");
+                Trace.WriteLine("Cells cleaned");
 
                 //добавляю пустые строки
                 for (int i = 0; i < infos.Count - 3; i++)
@@ -207,7 +207,7 @@ namespace SchedulesTable
                     tsd.SetCellStyle(tsd.LastRowNumber - 1, 0, cellStyle1);
                     tsd.SetCellStyle(tsd.LastRowNumber - 1, 1, cellStyle2);
                     tsd.SetCellStyle(tsd.LastRowNumber - 1, 2, cellStyle3);
-                    Debug.WriteLine("Create row number: " + i);
+                    Trace.WriteLine("Create row number: " + i);
                 }
 
                 for (int i = 0; i < infos.Count; i++)
@@ -216,7 +216,7 @@ namespace SchedulesTable
                     SheetScheduleInfo info = infos[i];
                     tsd.SetCellText(curRowNumber, 0, info.SheetNumberString.ToString());
                     tsd.SetCellText(curRowNumber, 1, info.ScheduleName);
-                    Debug.WriteLine("Write: " + info.SheetNumberString + " : " + info.ScheduleName + ", row №: " + curRowNumber);
+                    Trace.WriteLine("Write: " + info.SheetNumberString + " : " + info.ScheduleName + ", row №: " + curRowNumber);
 
                     //Увеличу высоту строки, если текст слишком длинный
                     double increaseRowHeight = 1.0;
@@ -225,13 +225,13 @@ namespace SchedulesTable
                         increaseRowHeight *= sets.rowHeightCoeff;
                     }
                     double rowHeight = sets.rowHeight * increaseRowHeight;
-                    Debug.WriteLine($"Row height coeff: {increaseRowHeight}, height: {rowHeight}");
+                    Trace.WriteLine($"Row height coeff: {increaseRowHeight}, height: {rowHeight}");
                     tsd.SetRowHeight(curRowNumber, rowHeight);
                 }
                 t.Commit();
             }
             sets.Save();
-            Debug.WriteLine("Succeded");
+            Trace.WriteLine("Succeded");
             return Result.Succeeded;
         }
     }
